@@ -15,6 +15,7 @@ This project depends on:
 
 * [Adafruit_CircuitPython_SSD1306](https://github.com/adafruit/Adafruit_CircuitPython_SSD1306) (MIT)
 * [RPi.GPIO](https://pypi.org/project/RPi.GPIO/) (MIT)
+* [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P#standard-styles)
 
 # Drawings and STL-files
 
