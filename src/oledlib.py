@@ -1,5 +1,3 @@
-import time
-
 from board import SCL, SDA
 import busio
 
@@ -43,24 +41,17 @@ def write_to_display(l1, l2, l3, l4):
     # First define some constants to allow easy resizing of shapes.
     padding = 2
     top = 0
+    lineheight = 15
 
     # Load font to display
     font = ImageFont.truetype(font="PressStart2P.ttf", size=12)
 
-    x = padding
-
-    # Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as the python script!
-    # Some other nice fonts to try: http://www.dafont.com/bitmap.php
-    #font = ImageFont.truetype('Minecraftia.ttf', 8)
-
     # Write three lines of text.
-    draw.text((x, top),    l1,  font=font, fill=255)
-    draw.text((x, top+15), l2, font=font, fill=255)
-    draw.text((x, top+30), l3, font=font, fill=255)
-    draw.text((x, top+45), l4, font=font, fill=255)
+    draw.text((padding, top),    l1,  font=font, fill=255)
+    draw.text((padding, top + lineheight), l2, font=font, fill=255)
+    draw.text((padding, top + 2 * lineheight), l3, font=font, fill=255)
+    draw.text((padding, top + 3 * lineheight), l4, font=font, fill=255)
 
     # Display image.
     disp.image(image)
     disp.show()
-
-write_to_display("Test", "genom att", "trycka på", "en av dem")
