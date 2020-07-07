@@ -15,5 +15,6 @@ The servo assembly is pictured in the servo_assembly.pdf
 ## BOM
 
 * 1 servo fastener
+* 1 locking plate
 * 1 SG90-compatible servo motor
-* 1 [Micro switch with lever 6.5x12.8x5.8 mm](https://www.amazon.com/Cylewet-25Pcs-Switch-Arduino-CYT1073/dp/B073TYWX86) 
+* 1 [Micro switch with lever 6.5x12.8x5.8 mm](https://www.amazon.com/Cylewet-25Pcs-Switch-Arduino-CYT1073/dp/B073TYWX86)
