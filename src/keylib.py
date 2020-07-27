@@ -1,17 +1,22 @@
 import RPi.GPIO as GPIO
 import time
 
-servoPIN = 17
-buttonPIN = 18
+servoPINs = [4, 5, 6, 7, 8, 9, 10, 11, 12]
+buttonPINs = [13, 14, 15, 16, 17, 18, 19, 20, 21] 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(servoPIN, GPIO.OUT)
-GPIO.setup(buttonPIN, GPIO.IN)
 
-p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
+for servoPIN in servoPINs:
+    GPIO.setup(servoPIN, GPIO.OUT)
+    
+for buttonPIN in buttonPINs:
+    GPIO.setup(buttonPIN, GPIO.IN)
 
+keys = [] # array with all servos
 
-keys = [p] # array with all keys
-buttons = [buttonPIN]
+for servoPIN in servoPINs:
+    p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
+    keys.append(p)
+print(keys)
 
 
 def set_degrees(pos):
@@ -36,13 +41,10 @@ def unlock_key(key):
 
 
 def button_status(key):
-    return GPIO.input(buttons[key])
+    return GPIO.input(buttonPINs[key])
 
 
 def clean_up():
     for servo in keys:
         servo.stop()
     GPIO.cleanup()
-
-
-p.start(set_degrees(0)) # Initialization
