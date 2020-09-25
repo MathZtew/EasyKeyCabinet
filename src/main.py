@@ -269,7 +269,6 @@ if __name__ == "__main__":
         key_list_endpoint = options["key_list_endpoint"]
         key_log_entry_list_endpoint = options["key_log_entry_list_endpoint"]
         organization=options["organization"]
-        xcsrftoken=options["xcsrftoken"]
         token=options["token"]
     except KeyError as inst:
         print(inst.args, "not in config file")
