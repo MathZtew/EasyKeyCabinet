@@ -128,6 +128,7 @@ def get_key_status(token, key_list_endpoint):
     response_keys = requests.get(key_list_endpoint, headers={"Authorization":"Token " + token})
     
     keylist = response_keys.json()
+    print(keylist)
     i = 1
     for i in range(len(keylist)):
         msg_id = None
@@ -137,8 +138,10 @@ def get_key_status(token, key_list_endpoint):
             msg_id = keylist[i].get("status").get("id")
         else:
             key_status[keylist[i].get("order")] = False
-        keylist[i]["id"] = i
+        keylist[i]["id"] = len(keylist) - i
         key_api_status[keylist[i].get("order")] = keylist[i]
+        
+    print(key_api_status)
         
     return key_status, key_api_status
 
@@ -199,7 +202,10 @@ def take_key(key_log_entry_list_endpoint, key_api_status, key_status, token):
         content["taken_at"] = dt_string
         response = requests.post(key_log_entry_list_endpoint, headers = {"Authorization":"Token " + token}, data=content)
         response_json = response.json()
-        msg_id = response_json["id"]
+        msg_id = response_json.get("id")
+        if msg_id == None:
+            oled.write_to_display("Communication","Error","","")
+            return False, False
         
     else:
         content = {}
