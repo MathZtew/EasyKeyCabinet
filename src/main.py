@@ -129,17 +129,16 @@ def get_key_status(token, key_list_endpoint):
     
     keylist = response_keys.json()
     i = 1
-    for key in keylist:
+    for i in range(len(keylist)):
         msg_id = None
         # Lock the key if status is away
-        if key.get("status") != None:
-            key_status[key.get("order")] = key.get("status").get("taken_successfully") == True
-            msg_id = key.get("status").get("id")
+        if keylist[i].get("status") != None:
+            key_status[keylist[i].get("order")] = keylist[i].get("status").get("taken_successfully") == True
+            msg_id = keylist[i].get("status").get("id")
         else:
-            key_status[key.get("order")] = False
-        key["id"] = i
-        key_api_status[key.get("order")] = key
-        i += 1
+            key_status[keylist[i].get("order")] = False
+        keylist[i]["id"] = i
+        key_api_status[keylist[i].get("order")] = keylist[i]
         
     return key_status, key_api_status
 
@@ -179,8 +178,7 @@ def take_key(key_log_entry_list_endpoint, key_api_status, key_status, token):
         "taken_successfully": False,
         "returned_by_id": "",
         "returned_at": None,
-        "returned_successfully": False,
-        "csrfmiddlewaretoken": csrfmiddlewaretoken
+        "returned_successfully": False
         }
     
     oled.write_to_display("Nyckel:", key_api_status.get(pressed_key).get("name"), "", "")
@@ -189,7 +187,6 @@ def take_key(key_log_entry_list_endpoint, key_api_status, key_status, token):
     dt_string = now.strftime("%Y-%m-%dT%H:%M")
     
     is_taking = not key_status[pressed_key]
-    cookie = "csrftoken="+access_token + ";sessionid="+sessionid+";"
     
     msg_id = 0
     response = ""
