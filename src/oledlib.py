@@ -44,7 +44,7 @@ def write_to_display(l1, l2, l3, l4):
     lineheight = 15
 
     # Load font to display
-    font = ImageFont.truetype(font="PressStart2P.ttf", size=12)
+    font = ImageFont.truetype(font="/home/pi/EasyKeyCabinet/src/PressStart2P.ttf", size=12)
 
     # Write three lines of text.
     draw.text((padding, top),    l1,  font=font, fill=255)
@@ -55,3 +55,7 @@ def write_to_display(l1, l2, l3, l4):
     # Display image.
     disp.image(image)
     disp.show()
+    
+    
+def wltd(strings):
+    write_to_display(strings[0], strings[1], strings[2], strings[3])
