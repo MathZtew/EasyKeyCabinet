@@ -1,0 +1,180 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+definitions:
+  Key:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      status:
+        $ref: '#/definitions/Status'
+      order:
+        type: "integer"
+
+  Status:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      taken_by:
+        $ref: '#/definitions/User'
+      taken_at:
+        type: "string"
+      taken_successfully:
+        type: "boolean"
+      returned_by:
+        $ref: '#/definitions/User'
+      returned_at:
+        type: "string"
+      returned_successfully:
+        type: "boolean"
+
+  LogContent:
+    type: "object"
+    properties:
+      taken_by_id:
+        type: "string"
+      taken_at:
+        type: "string"
+      taken_successfully:
+        type: "boolean"
+      returned_by_id:
+        type: "string"
+      returned_at:
+        type: "string"
+      returned_successfully:
+        type: "boolean"
+
+  NewLogContent:
+    type: "object"
+    properties:
+      key_id:
+        type: "integer"
+      taken_by_id:
+        type: "string"
+      taken_at:
+        type: "string"
+      taken_successfully:
+        type: "boolean"
+      returned_by_id:
+        type: "string"
+      returned_at:
+        type: "string"
+      returned_successfully:
+        type: "boolean"
+    required:
+      - key_id
+      - taken_by_id
+      - taken_at
+      - taken_successfully
+
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      username:
+        type: "string"
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"
+      pretty_name:
+        type: "string"
+
+parameters:
+  log_id:
+    name: log_id
+    description: log_id log identifier
+    in: path
+    type: integer
+    required: true
+  log_content:
+    name: log_content
+    description: log_id log identifier
+    in: body
+    schema:
+      $ref: '#/definitions/LogContent'
+    required: true
+  new_log_content:
+    name: new_log_content
+    description: New log content to be saved
+    in: body
+    schema:
+      $ref: '#/definitions/NewLogContent'
+    required: true
+
+
+
+# Paths supported by the server application
+paths:
+  /keylog/keys:
+    get:
+      operationId: "key_api.get_keys"
+      tags:
+        - "Keys"
+      summary: "The list of keys that are in the server"
+      description: "Read the list of keys"
+      responses:
+        200:
+          description: "Successful read key list operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/Key'
+
+  /keylog/log-entries:
+    post:
+      operationId: "key_api.new_log"
+      parameters:
+        - $ref: '#/parameters/new_log_content'
+      tags:
+        - "Keylogs"
+      summary: "patch the log"
+      description: "Read the log with id log-id"
+      responses:
+        200:
+          description: "Successful change log entry operation"
+          schema:
+            $ref: '#/definitions/Status'
+
+  /keylog/log-entries/{log_id}:
+    get:
+      operationId: "key_api.get_log"
+      parameters:
+        - $ref: '#/parameters/log_id'
+      tags:
+        - "Keylogs"
+      summary: "The log of id number"
+      description: "Read the log with id log-id"
+      responses:
+        200:
+          description: "Successful read log entry operation"
+          schema:
+            $ref: '#/definitions/Status'
+    patch:
+      operationId: "key_api.change_log"
+      parameters:
+        - $ref: '#/parameters/log_id'
+        - $ref: '#/parameters/log_content'
+      tags:
+        - "Keylogs"
+      summary: "patch the log"
+      description: "Read the log with id log-id"
+      responses:
+        200:
+          description: "Successful change log entry operation"
+          schema:
+            $ref: '#/definitions/Status'
