@@ -32,10 +32,14 @@ def get_keys():
 
 
 def get_log(log_id):
+    if log_id < 0 or log_id >= len(keylogs):
+        return "Log not in system"
     return keylogs[log_id].to_dict() if keylogs[log_id] != None else None
 
 
 def change_log(log_id, log_content):
+    if log_id < 0 or log_id >= len(keylogs):
+        return "Log not in system"
     log = keylogs[log_id]
     print(log_content)
     if log == None:
@@ -69,12 +73,3 @@ keylogs = []
 keys[1] = Key(1, "Test", 0)
 users[1] = User(1, "P1", "Person", "Persson")
 users[1].set_identifiers(card="2345", long_id="1234")
-
-log = Keylog(len(keylogs), 1)
-log.take_key(users[1], "now", True)
-
-#log.take_key(users[1], "now", True)
-
-keylogs.append(log)
-
-update_statuses()
