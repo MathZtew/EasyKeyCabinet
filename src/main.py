@@ -73,10 +73,11 @@ def choose_a_key(wait_time):
     
     if wait_time is exceeded id -1 is returned.
     """
+    forever = wait_time == -1
     # Change to a time interval
     loops = wait_time / LOOP_WAIT
 
-    while loops > 0 or wait_time < 0:
+    while (loops > 0 or wait_time < 0) or forever:
         for i in range(NUM_OF_KEYS):
             if keys.button_status(i) == 1:
                 return i
@@ -164,30 +165,21 @@ def take_key(key_log_entry_list_endpoint, key_api_status, key_status, token):
     """
     
     oled.clear_display()
-    # Hotfix so that the camera is not on all the time, 
-    # by pressing key no 8 to start.
-    wait_for_value(8, True)
+    # Pressing a key will start it
+    pressed_key = choose_a_key(-1)
+    
+    # The key was not in the list from the API
+    if key_api_status.get(pressed_key) == None:
+        oled.wltd(oled_strings.strings("no_key", LANG))
+        time.sleep(MESSAGE_STATUS_TIME)
+        return False, False
+    
     oled.wltd(oled_strings.strings("scan_auth", LANG))
     
     id_string = read_HID.read_input(WAIT_FOR_PRESS, dev)
     
     if id_string == -1:
         oled.wltd(oled_strings.strings("no_auth", LANG))
-        return False, False
-    
-    oled.wltd(oled_strings.strings("press_key", LANG))
-    pressed_key = choose_a_key(WAIT_FOR_PRESS)
-    
-    # The key was not pressed within time limit
-    if pressed_key == -1:
-        oled.wltd(oled_strings.strings("key_not_chosen_time", LANG))
-        time.sleep(MESSAGE_STATUS_TIME)
-        return False, False
-    
-    # The key was not in the list from the API
-    if key_api_status.get(pressed_key) == None:
-        oled.wltd(oled_strings.strings("no_key", LANG))
-        time.sleep(MESSAGE_STATUS_TIME)
         return False, False
     
     # Fill in the required fields
@@ -254,6 +246,8 @@ def take_key(key_log_entry_list_endpoint, key_api_status, key_status, token):
         
     # Lock and send successfull to the API
     else:
+        oled.wltd(oled_strings.strings("press_key", LANG, l3=key_api_status.get(pressed_key).get("name")))
+        wait_for_value(pressed_key, 1)
         oled.wltd(oled_strings.strings("ling_key", LANG, l2=key_api_status.get(pressed_key).get("name")))
         keys.lock_key(pressed_key)
         key_status[pressed_key] = False
@@ -279,7 +273,7 @@ def retry_sending(is_taking, dev, endpoint, msg_id, token, content, response_jso
             
             # Send again
             if is_taking:
-                response_json = post_api(endpoint, content, token)
+                response_json = patch_api(endpoint, msg_id, content, token)
             else:
                 response_json = patch_api(endpoint, msg_id, content, token)
         else:
